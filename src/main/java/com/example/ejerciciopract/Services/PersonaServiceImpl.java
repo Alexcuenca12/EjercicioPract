@@ -11,6 +11,21 @@ public class PersonaServiceImpl extends GenericServiceImpl<Persona,Long> impleme
     @Autowired
     IPersona personaRepository;
 
+
+    public Boolean findBydni (String dni){
+        return personaRepository.existsByDni(dni);
+    }
+
+    public String buscarNombreCompletoPorDni(String dni) {
+        Persona persona = personaRepository.findByDni(dni);
+        if (persona != null) {
+            return persona.getApellido() + " " + persona.getNombre();
+        }
+        return null;
+    }
+
+
+
     @Override
     public CrudRepository<Persona, Long> getDao() {
         return personaRepository;

@@ -24,13 +24,25 @@ public class PersonaController {
 
     @PostMapping("/post")
     public ResponseEntity<Persona> create(@RequestBody Persona a) {
-        return new ResponseEntity<>(personaService.save(a), HttpStatus.CREATED);
+        // Verificar si el DNI ya existe
+        if (personaService.findBydni(a.getDni())) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        try {
+            return new ResponseEntity<>(personaService.save(a), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
+    // Método para actualizar por ID
     @PutMapping("/put/{id}")
     public ResponseEntity<Persona> update(@PathVariable Long id, @RequestBody Persona a) {
         Persona persona = personaService.findById(id);
         if (persona != null) {
+            if (!persona.getDni().equals(a.getDni()) && personaService.findBydni(a.getDni())) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
             try {
                 persona.setId_persona(a.getId_persona());
                 persona.setNombre(a.getNombre());
@@ -53,5 +65,21 @@ public class PersonaController {
     public ResponseEntity<Persona> delete(@PathVariable Long id) {
         personaService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/findByDni/{dni}")
+    public ResponseEntity<Boolean> findByDni(@PathVariable String dni) {
+        boolean exists = personaService.findBydni(dni);
+        return new ResponseEntity<>(exists, HttpStatus.OK);
+    }
+
+    @GetMapping("/nombreCompleto/{dni}")
+    public ResponseEntity<String> obtenerNombreCompletoPorDni(@PathVariable String dni) {
+        String nombreCompleto = personaService.buscarNombreCompletoPorDni(dni);
+        if (nombreCompleto != null) {
+            return new ResponseEntity<>(nombreCompleto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
