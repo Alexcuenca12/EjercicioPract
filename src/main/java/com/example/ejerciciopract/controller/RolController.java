@@ -26,7 +26,7 @@ public class RolController {
     @PostMapping("/post")
     public ResponseEntity<Rol> create(@RequestBody Rol a) {
         // Verificar si el rol ya existe
-        Boolean rolExists = rolService.findByRol(a.getRol());
+        Boolean rolExists = rolService.existsByRol(a.getRol());
         if (rolExists) {
             // El rol ya existe, devolver un conflicto (409)
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -65,7 +65,7 @@ public class RolController {
 
     @GetMapping("/exists/rol")
     public ResponseEntity<Boolean> existsByRol(@RequestParam String rol) {
-        Boolean exists = rolService.findByRol(rol);
+        Boolean exists = rolService.existsByRol(rol);
         if (exists) {
             return new ResponseEntity<>(exists, HttpStatus.OK);
         } else {
@@ -74,8 +74,8 @@ public class RolController {
     }
 
     @GetMapping("/exists/estado")
-    public ResponseEntity<Boolean> existsByEstado(@RequestParam String estado) {
-        Boolean exists = rolService.findByEstado(estado);
+    public ResponseEntity<Boolean> existsByEstado(@RequestParam Boolean estado) {
+        Boolean exists = rolService.existsByEstado(estado);
         if (exists) {
             return new ResponseEntity<>(exists, HttpStatus.OK);
         } else {

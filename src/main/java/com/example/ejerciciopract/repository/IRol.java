@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IRol extends JpaRepository<Rol, Long> {
 
-    public Boolean findByRol (String rol);
-    public Boolean findByEstado (String estado);
+    boolean existsByRol (String rol);
+    boolean existsByEstado(Boolean estado);
 }

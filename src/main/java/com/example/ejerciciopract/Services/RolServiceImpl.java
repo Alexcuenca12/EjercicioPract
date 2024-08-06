@@ -19,12 +19,12 @@ public class RolServiceImpl extends GenericServiceImpl <Rol,Long> implements IRo
 
 
     @Override
-    public Boolean findByRol(String rol) {
-        return rolRepository.findByRol(rol);
+    public boolean existsByRol(String rol) {
+        return rolRepository.existsByRol(rol);
     }
 
     @Override
-    public Boolean findByEstado(String estado) {
-        return rolRepository.findByEstado(estado);
+    public boolean existsByEstado(Boolean estado) {
+        return rolRepository.existsByEstado(estado);
     }
 }

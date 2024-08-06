@@ -5,8 +5,8 @@ import com.example.ejerciciopract.model.Rol;
 
 public interface IRolService extends IGenericService<Rol,Long> {
 
-    public Boolean findByRol (String rol);
+    boolean existsByRol (String rol);
+    boolean existsByEstado(Boolean estado);
 
-    public Boolean findByEstado (String estado);
 
 }
