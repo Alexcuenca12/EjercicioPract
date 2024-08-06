@@ -7,11 +7,17 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UsuarioServiceImpl extends GenericServiceImpl<Usuario,Long> implements IGenericService<Usuario,Long> {
+public class UsuarioServiceImpl extends GenericServiceImpl<Usuario,Long> implements IUsuarioService {
     @Autowired
     IUsuario usuarioRepository;
+
     @Override
     public CrudRepository<Usuario, Long> getDao() {
         return usuarioRepository;
+    }
+
+    @Override
+    public Usuario siExiste(String user, String password) {
+        return usuarioRepository.siExiste(user, password);
     }
 }

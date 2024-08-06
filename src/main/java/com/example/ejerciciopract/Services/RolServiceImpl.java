@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RolServiceImpl extends GenericServiceImpl <Rol,Long> implements IGenericService<Rol,Long> {
+public class RolServiceImpl extends GenericServiceImpl <Rol,Long> implements IRolService {
 
     @Autowired
     private IRol rolRepository;
@@ -15,5 +15,16 @@ public class RolServiceImpl extends GenericServiceImpl <Rol,Long> implements IGe
     @Override
     public CrudRepository<Rol, Long> getDao() {
         return rolRepository;
+    }
+
+
+    @Override
+    public Boolean findByRol(String rol) {
+        return rolRepository.findByRol(rol);
+    }
+
+    @Override
+    public Boolean findByEstado(String estado) {
+        return rolRepository.findByEstado(estado);
     }
 }

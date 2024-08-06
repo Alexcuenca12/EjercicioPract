@@ -25,8 +25,18 @@ public class RolController {
 
     @PostMapping("/post")
     public ResponseEntity<Rol> create(@RequestBody Rol a) {
-        return new ResponseEntity<>(rolService.save(a), HttpStatus.CREATED);
+        // Verificar si el rol ya existe
+        Boolean rolExists = rolService.findByRol(a.getRol());
+        if (rolExists) {
+            // El rol ya existe, devolver un conflicto (409)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+        // Si el rol no existe, proceder a guardarlo
+        Rol createdRol = rolService.save(a);
+        return new ResponseEntity<>(createdRol, HttpStatus.CREATED);
     }
+
 
     @PutMapping("/put/{id}")
     public ResponseEntity<Rol> update(@PathVariable Long id, @RequestBody Rol a) {
@@ -51,5 +61,25 @@ public class RolController {
     public ResponseEntity<Rol> delete(@PathVariable Long id) {
         rolService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/exists/rol")
+    public ResponseEntity<Boolean> existsByRol(@RequestParam String rol) {
+        Boolean exists = rolService.findByRol(rol);
+        if (exists) {
+            return new ResponseEntity<>(exists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/exists/estado")
+    public ResponseEntity<Boolean> existsByEstado(@RequestParam String estado) {
+        Boolean exists = rolService.findByEstado(estado);
+        if (exists) {
+            return new ResponseEntity<>(exists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

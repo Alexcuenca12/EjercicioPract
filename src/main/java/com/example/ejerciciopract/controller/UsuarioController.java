@@ -25,8 +25,18 @@ public class UsuarioController {
 
     @PostMapping("/post")
     public ResponseEntity<Usuario> create(@RequestBody Usuario a) {
-        return new ResponseEntity<>(usuarioService.save(a), HttpStatus.CREATED);
+        // Verificar si el usuario ya existe
+        Usuario existingUser = usuarioService.siExiste(a.getUser(), a.getPassword());
+        if (existingUser != null) {
+            // El usuario ya existe, devolver un conflicto (409)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+        // Si el usuario no existe, proceder a guardarlo
+        Usuario createdUser = usuarioService.save(a);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
+
 
     @PutMapping("/put/{id}")
     public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody Usuario a) {
@@ -52,5 +62,16 @@ public class UsuarioController {
     public ResponseEntity<Usuario> delete(@PathVariable Long id) {
         usuarioService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Usuario> login(@RequestParam String user, @RequestParam String password) {
+        Usuario usuario = usuarioService.siExiste(user, password);
+        if (usuario != null) {
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        }
     }
 }
